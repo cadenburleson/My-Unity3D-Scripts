@@ -5,12 +5,8 @@ using System.Net;
 
 public class MoneyGameManager : MonoBehaviour {
 
-	public static float money = 0;
+	private float money = 0;
 	public Text moneyText;
-//	private string timeSinceStartFloat_Handle;
-//	public Text timeSinceGameStart_Text;
-//	private float myTime;
-//	public float timer;
 
 	public GameObject managerWindow;
 	public bool isManagersMenuOn = false;
@@ -42,19 +38,31 @@ public class MoneyGameManager : MonoBehaviour {
 								
 	public void IncreaseMoney(float amount) {
 		money = money + amount;
-//		PlayerPrefs.SetFloat ("playerMoney", money);
-		// Put this in one of the increase functions or decrease functions 
 		moneyText.text = money.ToString ("C");
-//		moneyText.text = ("$" + money.ToString("N"));
 	}
 
 	public void DecreaseMoney(float amount) {
 		money = money - amount;
-//		PlayerPrefs.SetFloat ("playerMoney", money);
-		// Put this in one of the increase functions or decrease functions 
 		moneyText.text = money.ToString ("C");
-//		moneyText.text = ("$" + money.ToString());
 	}
+
+//	public float DecreaseMoney(Business bizToBuy) {
+//		float bzCost = bizToBuy.getCost ();
+//		money = money - bzCost;
+//		moneyText.text = money.ToString ("C");
+//	}
+
+	public float getMoneyVal() {
+		return money;
+	}
+
+//	public float getMoneyVal(){
+//		return this.mo
+//	}
+//
+//	public string getId() {
+//		return this.id;
+//	}
 
 
 

@@ -5,13 +5,13 @@ using System.IO;
 
 public class FileService {
 
-	public FileService() {
-	
-	}
+//	public FileService() {
+//	
+//	}
 
 	public Business load(string businessId) {
 
-		Debug.Log (">> FileService load: " + businessId);
+		Debug.Log (">> FileService is loading Business: " + businessId + ", please wait...");
 
 		Business business = null;
 
@@ -24,14 +24,14 @@ public class FileService {
 
 			Debug.Log ("<< FileService returning business: " + business.getId());
 			Debug.Log ("<< qtyOwned: " + business.getQuantityOwned());
-			Debug.Log ("FileService - LOAD - DATATATATATAT ~~" + Application.persistentDataPath);
+			Debug.Log ("You have " + business.getQuantityOwned() +" "+ business.getName() + " Businesses.");
+			Debug.Log ("FileService - LOAD - Data ~~" + Application.persistentDataPath);
 		}
+
 		return business;
 	}
 
 	public void save(Business business) {
-
-		Debug.Log (">> FileService save: " + business.getId() );
 
 		BinaryFormatter bf = new BinaryFormatter ();
 		FileStream file = File.Open (Application.persistentDataPath + "/biz_" + business.getId() + ".dat", FileMode.OpenOrCreate);
@@ -41,7 +41,9 @@ public class FileService {
 
 		Debug.Log (">> FileService save: " + business.getId() );
 		Debug.Log ("<< qtyOwned: " + business.getQuantityOwned());
-		Debug.Log ("FileService - SAVE - DATATATATATAT .." + Application.persistentDataPath);
+		Debug.Log ("FileService - SAVE - Data .." + Application.persistentDataPath);
+
+
 	}
 
 	public void delete(string businessId) {

@@ -1,17 +1,25 @@
 ﻿using UnityEngine;
-using System.Collections;
+//using System.Collections;
+//using UnityEngine.UI;
 
-public class Player : MonoBehaviour {
+public static class Player {
 
-	private float money;
+	private static float cash;
 
-	// Use this for initialization
-	void Start () {
-	
-	}
-	
-	// Update is called once per frame
-	void Update () {
-	
-	}
+
+	public static float bought(Business bizToBuy) {
+		cash = cash - bizToBuy.getCost ();
+		Debug.Log ("Player has bought" + bizToBuy.getName() + " and was charged an amount of : $" + bizToBuy.getCost());
+		return cash;
+	} 
+
+
+//	private float money;
+//
+//
+//
+//	public static float getPlayersMoney() {
+//		return this.money;
+//	}
+
 }

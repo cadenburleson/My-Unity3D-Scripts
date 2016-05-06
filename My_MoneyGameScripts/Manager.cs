@@ -11,13 +11,10 @@ public class Manager : MonoBehaviour {
 
 	public string managerDescription;
 
-
-
 	[SerializeField]
 	private Text nameText;
 	[SerializeField]
 	private Text priceText;
-
 
 	public Text descriptionText;
 
