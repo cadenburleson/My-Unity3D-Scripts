@@ -9,6 +9,9 @@ public class Business  {
 	private float cost = 0f;
 	private int quantityOwned = 0;
 	private float income = 0f;
+
+//	public float thisDickSize { get; set;}
+
 //	private float resetTimeForBusiness;
 	public Business(string id) {
 		this.id = id;
@@ -24,7 +27,7 @@ public class Business  {
 	public string getName() {
 		return this.name;
 	}
-	public void setName(string businessName) {
+	public void setName(string businessName){
 		this.name = businessName;
 	}
 //	*** CYCLE TIME ***

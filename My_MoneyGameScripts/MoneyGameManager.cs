@@ -45,24 +45,11 @@ public class MoneyGameManager : MonoBehaviour {
 		money = money - amount;
 		moneyText.text = money.ToString ("C");
 	}
-
-//	public float DecreaseMoney(Business bizToBuy) {
-//		float bzCost = bizToBuy.getCost ();
-//		money = money - bzCost;
-//		moneyText.text = money.ToString ("C");
-//	}
-
+		
 	public float getMoneyVal() {
 		return money;
 	}
 
-//	public float getMoneyVal(){
-//		return this.mo
-//	}
-//
-//	public string getId() {
-//		return this.id;
-//	}
 
 
 
