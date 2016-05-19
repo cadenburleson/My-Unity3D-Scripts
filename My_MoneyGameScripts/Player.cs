@@ -1,25 +1,36 @@
 ﻿using UnityEngine;
-//using System.Collections;
-//using UnityEngine.UI;
+using System;
+using UnityEngine.UI;
 
-public static class Player {
+[Serializable]
+public class Player { 
 
-	private static float cash;
+//	public static Player current;
 
+	private float money = 0f;
+	[SerializeField]
+	private Text moneyText;
 
-	public static float bought(Business bizToBuy) {
-		cash = cash - bizToBuy.getCost ();
-		Debug.Log ("Player has bought" + bizToBuy.getName() + " and was charged an amount of : $" + bizToBuy.getCost());
-		return cash;
-	} 
-
-
-//	private float money;
-//
-//
-//
-//	public static float getPlayersMoney() {
-//		return this.money;
+//	void awake () { 
+//		moneyText.text = money.ToString ("C");
 //	}
+
+	public void IncreaseMoneyBy(float amount) {
+		money = money + amount;
+//		money = getMoneyVal () + amount;
+		moneyText.text = money.ToString ("C");
+		Debug.Log ("You have Increased your Money by " + amount );
+	}
+
+	public void DecreaseMoneyBy(float amount){
+		money = money - amount;
+//		money = getMoneyVal () - amount;
+		moneyText.text = money.ToString ("C");
+		Debug.Log ("You have Decreased your Money by " + amount );
+	}
+
+	public float getMoneyVal() {
+		return money;
+	}
 
 }

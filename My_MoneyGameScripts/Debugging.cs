@@ -5,8 +5,6 @@ using UnityEngine.UI;
 public class Debugging : MonoBehaviour {
 	
 	[SerializeField]
-	private MoneyGameManager myGame;
-	[SerializeField]
 	private GameObject debugPanel;
 
 	public Text d_moneyText;
@@ -29,16 +27,6 @@ public class Debugging : MonoBehaviour {
 			Debug.Log ("You have pressed the debugger");
 			isDebugMenuActive = !isDebugMenuActive;
 			debugPanel.SetActive (isDebugMenuActive);
-		}
-
-
-		if (Input.GetKeyDown(KeyCode.M)) {
-
-			Debug.Log (myGame.getMoneyVal ());
-			d_moneyText.text = myGame.getMoneyVal().ToString();
-			
-//			Debug.Log("" + myGame.getMoney();
-//			moneyText.text = money.ToString ("C");
 		}
 
 	}

@@ -1,13 +1,14 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
+using System;
 
 using System.Runtime.Serialization.Formatters.Binary;
 
 public class BusinessController : MonoBehaviour {
 
-	public MoneyGameManager myMoneyGameManager;
-
+	[SerializeField]
+	private Player myPlayer;
 
 	// ID
 	[SerializeField]
@@ -17,7 +18,6 @@ public class BusinessController : MonoBehaviour {
 	private string bizName = "The name you want to call your business...";
 	[SerializeField]
 	private Text nameDisplayText;
-
 
 	// CYCLE TIME
 	[SerializeField]
@@ -33,7 +33,7 @@ public class BusinessController : MonoBehaviour {
 	[SerializeField]
 	private float bizCost = 0f;
 	[SerializeField]
-	private Text buyBusinessCostText;
+	private Text businessCostText;
 	// QUANTITY OWNED
 	//	[SerializeField]
 	private int bizQuantityOwned = 0;
@@ -60,6 +60,7 @@ public class BusinessController : MonoBehaviour {
 	private Business myBusiness;
 
 	void Start () {
+
 		Debug.Log ("Start()");
 		initBusiness ();
 	}
@@ -70,7 +71,6 @@ public class BusinessController : MonoBehaviour {
 		myBusiness = fileService.loadBusinessById (bizId);
 
 		if (myBusiness == null) {
-
 			// No file existed; set the defaults...
 			myBusiness = new Business (bizId);
 			myBusiness.setIncome (bizIncome);
@@ -78,60 +78,59 @@ public class BusinessController : MonoBehaviour {
 			myBusiness.setCost (bizCost);
 			myBusiness.setName (bizName);
 			myBusiness.setCycleTime (bizCycleTime);
-			Debug.Log ("No file existed, we created a business with the values your chose for you :) ");
+			Debug.Log ("No business file existed, we created a business with the values your chose for you :) ");
 		}
 
 		//goes away (only if business after load == null
 		incomeText.text = bizIncome.ToString ("C");
 		text_quantityOwned.text = bizQuantityOwned.ToString("D");
-		buyBusinessCostText.text = bizCost.ToString("C");
-
+		businessCostText.text = bizCost.ToString("C");
 		nameDisplayText.text = bizName;
 
-//		bizSlider.maxValue = bizCycleTime;
-		bizSlider.maxValue = myBusiness.getCycleTime();
-
+		bizSlider.maxValue = bizCycleTime;
 		bizSlider.value = 0;
-		//		quantityOwned = PlayerPrefs.GetInt ("myQuantityOwned");
-		text_quantityOwned.text = myBusiness.getQuantityOwned().ToString("D");
-
 		Debug.Log ("Business " + myBusiness.getId() + " Has been initialized()... ");
 
 	}
 		
 	public void Update () {
 
-		if ( myMoneyGameManager.getMoneyVal () >= myBusiness.getCost() ) {
-			buyBusinessButton.interactable = true;
-		} else {
+		// if the business costs more than you can afford then disable the buy button
+		if (myBusiness.getCost() > myPlayer.getMoneyVal()) {
 			buyBusinessButton.interactable = false;
+		}else{
+			buyBusinessButton.interactable = true;
 		}
-
-
+			
 		if (isTimerStarted == true) {
-
+			// move the slider
 			bizSlider.value +=  Time.deltaTime;
 			bizCycleTime -= Time.deltaTime;
+
 			text_bizCycleTime.text = bizCycleTime.ToString("00:00:00");
-							
 			// LOOK AT THIS BELOW
 			buyBusinessButton.interactable = false;
 			workButton.interactable = false;
 
 			if (bizCycleTime <= 0) {
-
 				Debug.Log ("The bizCycle Time is suposed to be less than or equal to mybiz.getcycletime() ");
-				Debug.Log ("biz cycle time is : " + bizCycleTime + " The mybiz.getCycleTime() is : " + myBusiness.getCycleTime());
+				Debug.Log ("biz cycle time is : " + bizCycleTime + " The myBusiness.getCycleTime() is : " + myBusiness.getCycleTime());
 
-				bizCycleTime = myBusiness.getCycleTime ();
 				bizSlider.value = 0;
+				// resets the cycle time
+				bizCycleTime = myBusiness.getCycleTime ();
+				bizSlider.maxValue = bizCycleTime;
+//				bizSlider.maxValue = myBusiness.getCycleTime();
 
 				workButton.interactable = true;
 
-				myMoneyGameManager.IncreaseMoney ( myBusiness.getIncome() );
-				incomeText.text = myBusiness.getIncome().ToString("C");
-				text_bizCycleTime.text = myBusiness.getCycleTime().ToString("00:00:00");
-
+				// makes sure that you don't multiply by zero therefor making your value zero always
+				if (myBusiness.getQuantityOwned() == 0) {
+					myPlayer.IncreaseMoneyBy (myBusiness.getIncome());
+				} else {
+					myPlayer.IncreaseMoneyBy (myBusiness.getIncome() * myBusiness.getQuantityOwned());
+				}
+					
 				fileService.saveBusiness (myBusiness);
 				isTimerStarted = false;
 				Debug.Log ("Timer Has Been Stopped.");
@@ -139,8 +138,7 @@ public class BusinessController : MonoBehaviour {
 			}
 
 		}
-
-
+			
 	} // end of update 
 
 
@@ -149,31 +147,35 @@ public class BusinessController : MonoBehaviour {
 		Debug.Log ("timer is : " + isTimerStarted);
 	}
 
+
 	public void BuyBusiness() {
 		myAudio.Play ();
-		//		Player.bought(myBusiness);
-		myMoneyGameManager.DecreaseMoney( myBusiness.getCost());
-		int qty = myBusiness.getQuantityOwned ();
+		myPlayer.DecreaseMoneyBy( myBusiness.getCost() );
+			
+		// Updates the quantity owned both data and text
+		int qty = myBusiness.getQuantityOwned();
 		qty++;
+
 		myBusiness.setQuantityOwned ( qty );
 		text_quantityOwned.text = myBusiness.getQuantityOwned().ToString("D");
 
-		float income = myBusiness.getIncome (); 
-		income = income + (Mathf.Log(bizIncome));
-		if (income >= myBusiness.getCost()) {
-			Debug.Log ("You Are Making More than this building costs, SOMETHING MUST BE WRONG!");
-			myBusiness.setCost ( myBusiness.getCost() * 2);
-			buyBusinessCostText.text = myBusiness.getCost ().ToString ("C");
 
-		}
+		Debug.Log("bizCost local = " + bizCost + "myBusiness.getCost() : " + myBusiness.getCost());
+		// Business COST update
+		myBusiness.setCost ( myBusiness.getCost() * Mathf.Pow(1.07f, myBusiness.getQuantityOwned() ) ); 
+		businessCostText.text = myBusiness.getCost().ToString("C");
 
-		Debug.Log (income);
-		myBusiness.setIncome( income );
+		// Business Income update
+		Debug.Log("bizIncome local = " + bizIncome + "myBusiness.getIncome() : " + myBusiness.getIncome());
+
+		// Maybe make a new var in the business class called BaseIncome instead of using bizIncome
+		// And have the BaseIncome Never change after init()
+		myBusiness.setIncome ( bizIncome * myBusiness.getQuantityOwned () );
+		incomeText.text = myBusiness.getIncome().ToString("C");
 
 		fileService.saveBusiness (myBusiness);
 
-		Debug.Log ("You bought business");
-		//		updateText ();
+		Debug.Log ("You bought one more building of : " + myBusiness.getName() + "You now have : " + myBusiness.getQuantityOwned() );
 
 	} // end of buybusiness
 
@@ -182,9 +184,6 @@ public class BusinessController : MonoBehaviour {
 		fileService.deleteBusinessById (bizId);
 		Debug.Log ("You have deleted your save");
 	}
-
-
-
 
 
 }

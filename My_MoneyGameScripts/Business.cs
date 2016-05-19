@@ -2,10 +2,9 @@
 
 [Serializable]
 public class Business  {
-	private string id;
+	private string id = "";
 	private string name = "The name you want to call your business...";
-//	private float timeForBusiness = 0f;
-	private float cycleTime;
+	private float cycleTime = 0f;
 	private float cost = 0f;
 	private int quantityOwned = 0;
 	private float income = 0f;
