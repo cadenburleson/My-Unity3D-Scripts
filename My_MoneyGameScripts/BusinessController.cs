@@ -114,7 +114,6 @@ public class BusinessController : MonoBehaviour {
 			bizCycleTime -= Time.deltaTime;
 
 //			text_bizCycleTime.text = bizCycleTime.ToString("00:00:00");
-
 			// LOOK AT THIS BELOW
 			buyBusinessButton.interactable = false;
 			workButton.interactable = false;
@@ -130,7 +129,7 @@ public class BusinessController : MonoBehaviour {
 				workButton.interactable = true;
 
 				// makes sure that you don't multiply by zero therefor making your value zero always
-				if (myBusiness.getQuantityOwned() <= 0) {
+				if (myBusiness.getQuantityOwned() == 0) {
 					myPlayer.IncreaseMoneyBy (myBusiness.getIncome());
 //					myPlayer.IncreaseMoneyBy (myBusiness.getBaseIncome ());
 				} else {

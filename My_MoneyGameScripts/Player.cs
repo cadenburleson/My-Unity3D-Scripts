@@ -5,9 +5,8 @@ using UnityEngine.UI;
 [Serializable]
 public class Player { 
 
-//	public static Player current;
-
-	private float money = 0f;
+	public static float money = 0f;
+//	private float money = 0f;
 	[SerializeField]
 	private Text moneyText;
 
