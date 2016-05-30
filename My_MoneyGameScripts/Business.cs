@@ -5,9 +5,13 @@ public class Business  {
 	private string id = "";
 	private string name = "The name you want to call your business...";
 	private float cycleTime = 0f;
-	private float cost = 0f;
 	private int quantityOwned = 0;
+
+	private float cost = 0f;
 	private float income = 0f;
+
+	private float baseCost = 0f;
+	private float baseIncome = 0f;
 
 //	public float thisDickSize { get; set;}
 
@@ -43,6 +47,15 @@ public class Business  {
 	public void setCost(float cost){
 		this.cost = cost;
 	}
+
+//	*** BASE COST ***
+	public float getBaseCost(){
+		return this.baseCost;
+	}
+	public void setBaseCost(float cost){
+		this.baseCost = cost;
+	}
+
 //	*** QUANTITY OWNED ***
 	public int getQuantityOwned(){
 		return this.quantityOwned;
@@ -56,6 +69,14 @@ public class Business  {
 	}
 	public void setIncome(float income){
 		this.income = income;
+	}
+
+//	*** BASE INCOME ***
+	public float getBaseIncome() {
+		return this.baseIncome;
+	}
+	public void setBaseIncome(float income){
+		this.baseIncome = income;
 	}
 
 
