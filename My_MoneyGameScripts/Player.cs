@@ -3,33 +3,68 @@ using System;
 using UnityEngine.UI;
 
 [Serializable]
-public class Player { 
+public class Player : MonoBehaviour {
 
-	public static float money = 0f;
-//	private float money = 0f;
+	public string playerId;
+
+	public string playerName = "vagina";
+
 	[SerializeField]
-	private Text moneyText;
+	float moneyChecker; //used to see what the players money is in the inspector
 
-//	void awake () { 
-//		moneyText.text = money.ToString ("C");
-//	}
+	public float money;
 
-	public void IncreaseMoneyBy(float amount) {
-		money = money + amount;
-//		money = getMoneyVal () + amount;
-		moneyText.text = money.ToString ("C");
-		Debug.Log ("You have Increased your Money by " + amount );
+	public Text moneyText;
+
+	FileService fileService;
+
+	Player myPlayer;
+			
+	void Start () {
+		fileService = new FileService ();
+		if (myPlayer == null) {
+			myPlayer = new Player (playerId);
+		}
+		fileService.loadPlayer (myPlayer);
+		updateMoneyText ();
 	}
+		
+	void Update () {
+		moneyChecker = money;
+	}
+		
 
-	public void DecreaseMoneyBy(float amount){
-		money = money - amount;
-//		money = getMoneyVal () - amount;
-		moneyText.text = money.ToString ("C");
-		Debug.Log ("You have Decreased your Money by " + amount );
+	// Constructors
+	public Player () {}
+	// Class can have multiple constructor methods
+	public Player(string newPlayerId) {
+		playerId = newPlayerId;
+		//this.id = name;
+	}
+		
+
+	public string getName() {
+		return playerName;
+	}
+	public void setName(string name){
+		playerName = name;
 	}
 
 	public float getMoneyVal() {
 		return money;
 	}
+	public void setMoneyVal(float newMoneyVal) {
+		money = newMoneyVal;
+//		fileService.savePlayer (myPlayer);
+	}
+	public void updateMoneyText () {
+		moneyText.text = money.ToString("C");
+//		Debug.Log("update Money Text >> player.money = " + money);
+	}
+		
+}
 
+[Serializable]
+class PlayerData {
+	public float money;
 }

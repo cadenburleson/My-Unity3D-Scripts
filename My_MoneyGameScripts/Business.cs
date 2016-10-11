@@ -1,83 +1,103 @@
 ﻿using System;
+using System.Configuration;
+using UnityEngine;
 
 [Serializable]
-public class Business  {
-	private string id = "";
-	private string name = "The name you want to call your business...";
-	private float cycleTime = 0f;
-	private int quantityOwned = 0;
+public class Business {
+	
+	string businessId = "";
+	string businessName = "The name you want to call your business...";
+	// !! This doesn't seem like it should be in business
+	// !! Looks like it should be well? IDK now FUCK.
+	int businessQuantityOwned;
 
-	private float cost = 0f;
-	private float income = 0f;
+	float businessCycleTime;
+	float businessCost;
+	float businessIncome;
+	float businessBaseCost;
+	float businessBaseIncome;
 
-	private float baseCost = 0f;
-	private float baseIncome = 0f;
+	bool businessHasManager;
 
-//	public float thisDickSize { get; set;}
-
-//	private float resetTimeForBusiness;
-	public Business(string id) {
-		this.id = id;
+	public Business(){
 	}
-//	*** ID ***
+	// Constructors
+	public Business(string newId) {
+		businessId = newId;
+	}
+		
+
+	//	*** ID ***
 	public string getId() {
-		return this.id;
+		return businessId;
 	}
-	public void setId(string id) {
-		this.id = id;
+	public void setId(string newId) {
+		businessId = newId;
 	}
-//	*** NAME ***
+				
+	//	*** MANAGER ***		
+	public bool getManager() {
+		return businessHasManager;
+	}
+	public void setManager(bool newState) {
+		businessHasManager = newState;
+	}
+
+	//	*** NAME ***
 	public string getName() {
-		return this.name;
+		return businessName;
 	}
-	public void setName(string businessName){
-		this.name = businessName;
+	public void setName(string newBusinessName){
+		businessName = newBusinessName;
 	}
-//	*** CYCLE TIME ***
+
+	//	*** CYCLE TIME ***
 	public float getCycleTime() {
-		return this.cycleTime;
+		return businessCycleTime;
 	}
-	public void setCycleTime(float cycleTime) {
-		this.cycleTime = cycleTime;
-	}
-//	*** COST ***
-	public float getCost(){
-		return this.cost;
-	}
-	public void setCost(float cost){
-		this.cost = cost;
+	public void setCycleTime(float newCycleTime) {
+		businessCycleTime = newCycleTime;
 	}
 
-//	*** BASE COST ***
+	//	*** COST ***
+	public float getCost() {
+		return businessCost;
+	}
+	public void setCost(float cost) {
+		businessCost = cost;
+	}
+
+	//	*** BASE COST ***
 	public float getBaseCost(){
-		return this.baseCost;
+		return businessBaseCost;
 	}
-	public void setBaseCost(float cost){
-		this.baseCost = cost;
+	public void setBaseCost(float cost) {
+		businessBaseCost = cost;
 	}
 
-//	*** QUANTITY OWNED ***
+	//	*** QUANTITY OWNED ***
 	public int getQuantityOwned(){
-		return this.quantityOwned;
+		return businessQuantityOwned;
 	}
-	public void setQuantityOwned(int quantityOwned){
-		this.quantityOwned = quantityOwned;
-	}		
-//	*** INCOME ***
+	public void setQuantityOwned(int quantityOwned) {
+		businessQuantityOwned = quantityOwned;
+	}
+
+	//	*** INCOME ***
 	public float getIncome() {
-		return this.income;
+		return businessIncome;
 	}
 	public void setIncome(float income){
-		this.income = income;
+		businessIncome = income;
 	}
 
-//	*** BASE INCOME ***
+	//	*** BASE INCOME ***
 	public float getBaseIncome() {
-		return this.baseIncome;
+		return businessBaseIncome;
 	}
-	public void setBaseIncome(float income){
-		this.baseIncome = income;
+	public void setBaseIncome(float income) {
+		businessBaseIncome = income;
 	}
-
-
+		
 }
+
