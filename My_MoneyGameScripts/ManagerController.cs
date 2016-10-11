@@ -30,10 +30,9 @@ public class ManagerController : MonoBehaviour {
 	[SerializeField]
 	Business businessToRun;
 
-
 	FileService fileService;
 
-	// Use this for initialization
+//	 Use this for initialization
 	void Start () {
 
 		fileService = new FileService ();
@@ -46,20 +45,21 @@ public class ManagerController : MonoBehaviour {
 			 you provide in the inspector.
 			*/
 			myManager = new ManagerData (managerName);
-
 			myManager.setName (managerName);
 			myManager.setPriceVal (managerPrice);
 			myManager.setDescription (managerDescription);
-		
-			Debug.Log (string.Format ("Manager init () " + "Manager Name: {0},  Manager Price: {1}, Manager Description: {2}", myManager.getName(), myManager.getPriceVal(), myManager.getDescription() ) );
-
-			updateText ();
-
+			updateText ();	
 			fileService.saveManager (myManager);
-
+			Debug.Log (string.Format ("Manager init () " + "Manager Name: {0},  Manager Price: {1}, Manager Description: {2}", myManager.getName(), myManager.getPriceVal(), myManager.getDescription() ) );
+		}else {
+			Debug.Log ("Manager // your manager was NOT null");
+			Debug.Log (string.Format ("Manager Name: {0},  Manager Price: {1}, Manager Description: {2}", myManager.getName(), myManager.getPriceVal(), myManager.getDescription()));
 		}
+
+		updateText ();
 			
 	}
+
 	void updateText(){
 		nameText.text = myManager.getName ();
 		priceText.text = myManager.getPriceVal ().ToString ("c");
