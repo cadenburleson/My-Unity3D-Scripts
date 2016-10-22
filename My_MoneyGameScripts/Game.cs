@@ -3,9 +3,11 @@ using System.Collections;
 
 public class Game : MonoBehaviour {
 
-	private Player player;
-	private Business[] business;
-	private BusinessController businessController;
+	Player player;
+
+	Business[] business;
+
+	BusinessController businessController;
 
 	// Use this for initialization
 	void Start () {

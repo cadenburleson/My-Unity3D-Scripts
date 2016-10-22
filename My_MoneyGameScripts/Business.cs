@@ -6,6 +6,7 @@ using UnityEngine;
 public class Business {
 	
 	string businessId = "";
+
 	string businessName = "The name you want to call your business...";
 	// !! This doesn't seem like it should be in business
 	// !! Looks like it should be well? IDK now FUCK.
@@ -17,13 +18,20 @@ public class Business {
 	float businessBaseCost;
 	float businessBaseIncome;
 
-	bool businessHasManager;
+	bool isManagerWorking = false;
 
 	public Business(){
 	}
 	// Constructors
 	public Business(string newId) {
 		businessId = newId;
+	}
+
+	public bool getManagerWorkingStatus(){
+		return isManagerWorking;
+	}
+	public void setManagerWorkingStatus(bool new_Status){
+		isManagerWorking = new_Status;
 	}
 		
 
@@ -34,14 +42,7 @@ public class Business {
 	public void setId(string newId) {
 		businessId = newId;
 	}
-				
-	//	*** MANAGER ***		
-	public bool getManager() {
-		return businessHasManager;
-	}
-	public void setManager(bool newState) {
-		businessHasManager = newState;
-	}
+			
 
 	//	*** NAME ***
 	public string getName() {

@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using System.Xml.Linq;
+using System.ComponentModel.Design.Serialization;
 
 public class BusinessController : MonoBehaviour {
 
@@ -12,14 +14,17 @@ public class BusinessController : MonoBehaviour {
 	// NAME
 	[SerializeField]
 	string bizName = "The name you want to call your business...";
+
 	[SerializeField]
 	Text text_NameDisplay; // never assigned
 
 	// CYCLE TIME
 	[SerializeField]
 	float bizCycleTime;
+
 	[SerializeField]
 	Text text_bizCycleTime; // never assigned
+
 	[SerializeField]
 	Slider bizSlider; // never assigned
 
@@ -38,12 +43,14 @@ public class BusinessController : MonoBehaviour {
 	// INCOME
 	[SerializeField]
 	float bizIncome = 1f; //Make it to where this can't be zero.
+
 	[SerializeField]
 	Text text_Income; // never assigned
 
 	//Buttons
 	[SerializeField]
 	Button button_WorkBusiness; // never assigned
+
 	[SerializeField]
 	Button button_BuyBusiness;
 
@@ -53,19 +60,27 @@ public class BusinessController : MonoBehaviour {
 	public bool isTimerStarted;
 
 	[SerializeField]
-	bool isManagerOwned = false;
-	[SerializeField]
-	Button button_HireManager;
-
-	[SerializeField]
-	Player myPlayer;
-
-	[SerializeField]
 	Text baseIncome_Text;
 
-	FileService fileService;
+	/// *** Manager ***
+	public ManagerController myManagerController;
 
+
+	public bool isMyManagerWorking = false;
+
+
+//	[SerializeField]
+//	Button button_HireManager;
+
+
+
+	/// <summary>
+	/// Start this instance.
+	/// </summary>
+
+	Player myPlayer;
 	Business myBusiness;
+	FileService fileService;
 
 	void Start () {
 		//		Debug.Log ("BusinessController // Start()");
@@ -90,79 +105,148 @@ public class BusinessController : MonoBehaviour {
 			myBusiness.setBaseCost (bizCost);
 			myBusiness.setBaseIncome (bizIncome);
 
-			myBusiness.setManager (isManagerOwned);
-
 			Debug.Log ("BusinessController // NO BUSINESS FILE EXISTED, we created a business with the values your chose for you :) ");
 			Debug.Log (string.Format ("Business init () " + "Business Name: {0},  Business Cycle Time: {1}, Business Cost: {2}", myBusiness.getName(), myBusiness.getCycleTime(), myBusiness.getCost() ) );
 		} else {
 			Debug.Log ("BusinessController // your business was NOT null");
 			Debug.Log (string.Format ("Business Name: {0},  Business Cycle Time: {1}, Business Cost: {2} Business Income: {3} ", myBusiness.getName(), myBusiness.getCycleTime(), myBusiness.getCost(), myBusiness.getIncome() ) );
 		}
+
 		text_NameDisplay.text = myBusiness.getName ();
 		text_Income.text = myBusiness.getIncome ().ToString ("c");
 		text_BusinessCost.text = myBusiness.getCost ().ToString ("c");
 		text_quantityOwned.text = "qt : " + myBusiness.getQuantityOwned ().ToString ("d");
 		bizSlider.maxValue = myBusiness.getCycleTime();
 		bizSlider.value = 0;
+
 	} //End Of Start
 
 
 	public void Update () {
-
-		// Put a manager hire button here.
-//		button_WorkBusiness.interactable = false;
-
-		if (Input.GetKeyDown(KeyCode.B)) {
-			Debug.Log (myBusiness.getName() + " has a manager = " + myBusiness.getManager());
-		}
-
+		// UPDATES THE BASE INCOME TEXT
 		baseIncome_Text.text = myBusiness.getBaseIncome ().ToString();
+
 		checkIfYouCanAffordBusiness();
 
-		if (myBusiness.getManager () == true) {
-			//			if (isManagerOwned == true) { 
-
-			button_HireManager.interactable = false;
-
-			for (int x = 0; x <= bizCycleTime; x++) {
-				increaseSlider ();
-				if (bizCycleTime <= 0) {
-					resetSlider ();
-					float playersMoney = myBusiness.getBaseIncome () * myBusiness.getQuantityOwned ();
-					payPlayer (playersMoney);
-					myPlayer.updateMoneyText ();
-					//Debug.Log ("Reset Slider in Manager stuff");
-				}
-				text_bizCycleTime.text = bizCycleTime.ToString ("g");
-			}
-		} else {
-			Debug.Log (myBusiness.getName() + "doesn't have a manager yet.");
+		if (Input.GetKey(KeyCode.B)) {
+			Debug.Log ("BusinessController" + "Manager hired status is : " + myManagerController.myManager.getHiredStatus()); 
 		}
 
+
+//		GameManager.Instance.business[1].BuyBusiness ();
+//
+//		// Auto associates the ID of the Business attached to this
+//		// with the correct Game Instance function
+//		GameManager.Instance.business[ myBusiness.getId () ].BuyBusiness ();
+
+
+		if (myManagerController.myManager.getHiredStatus() == true){
+			
+			for (int x = 0; x <= bizCycleTime; x++) {
+				
+				increaseSlider ();
+
+				if (bizCycleTime <= 0) {
+					
+					resetSlider ();
+
+					float playersMoney = myBusiness.getBaseIncome () * myBusiness.getQuantityOwned ();
+
+					payPlayer (playersMoney);
+
+					myPlayer.updateMoneyText ();
+
+					//Debug.Log ("Reset Slider in Manager stuff");
+				}
+
+				text_bizCycleTime.text = bizCycleTime.ToString ("g");
+			}
+		}
+			
 		// Basically this is the Work Business function
 		if (isTimerStarted) {
-			increaseSlider();
+
 			button_WorkBusiness.interactable = false;
+
+			increaseSlider();
+
 			// makes sure that you don't multiply by zero therefor making your value zero always
 			if (bizCycleTime <= 0) {
+				
 				resetSlider ();
+
 				button_WorkBusiness.interactable = true;
+		
 				float playersMoney = myBusiness.getBaseIncome() * myBusiness.getQuantityOwned();
+
 				Debug.Log ("Work Button >> Players Money = " + playersMoney);
+
 				payPlayer(playersMoney);
+
 				myPlayer.updateMoneyText ();
+
 				isTimerStarted = false;
+
 				fileService.saveBusiness (myBusiness);
+
 			}
+
 			text_bizCycleTime.text = bizCycleTime.ToString("g");
 		}// End Of Timer Started
 
 	} // End Of Update
 
+	public void WorkBusiness(){
+		
+		isTimerStarted = !isTimerStarted;
+
+	} // workBusiness()
+
+	void increaseSlider(){
+		
+		bizSlider.value +=  Time.deltaTime;
+
+		bizCycleTime -= Time.deltaTime;
+
+	}
+		
+	void resetSlider() {
+		
+		bizSlider.value = 0;
+
+		bizCycleTime = myBusiness.getCycleTime ();
+
+	}
+		
+	// get rid of public?
 	public void hireManager() {
-		myBusiness.setManager (true);
-		fileService.saveBusiness (myBusiness);
-		isManagerOwned = true;
+
+		myManagerController.myManager.setHiredStatus (true);
+
+		myBusiness.setManagerWorkingStatus (true); // Used to set so that the business can know if you have bought the manager or not // because the manager gets turned off so the bool is not always accessible in the manager
+
+		Debug.Log ("hireManager() >> (1)" + myPlayer.getMoneyVal());
+
+		float playersMoney = myPlayer.getMoneyVal() - myManagerController.myManager.getPriceVal ();
+	
+		Debug.Log ("hireManager() >> (2)" + playersMoney);
+
+		myPlayer.setMoneyVal ( playersMoney );
+		myPlayer.updateMoneyText ();
+
+		// ?? Wouldn't it be better to do : 
+		//    myPlayer.Save(); ??
+		fileService.savePlayer (myPlayer);
+		fileService.saveManager (myManagerController.myManager);
+
+	}
+
+	void payPlayer(float amount) {
+		float playerMoney = myPlayer.getMoneyVal ();
+		playerMoney += amount;
+		myPlayer.setMoneyVal (playerMoney);
+		fileService.savePlayer (myPlayer);
+		//		Debug.Log("payPlayer >> players Money = " + playerMoney);
 	}
 		
 	void updateIncomeText() {
@@ -176,59 +260,37 @@ public class BusinessController : MonoBehaviour {
 	void updateQuantityText(){
 		text_quantityOwned.text = "qt : " + myBusiness.getQuantityOwned ().ToString ("d");
 	}
-
-	void payPlayer(float amount) {
-		float playerMoney = myPlayer.getMoneyVal ();
-		playerMoney += amount;
-		myPlayer.setMoneyVal (playerMoney);
-		fileService.savePlayer (myPlayer);
-//		Debug.Log("payPlayer >> players Money = " + playerMoney);
-	}
-
+		
 	void increasePlayersMoneyBy (float amount) {
+		
 		float playersMoney = myPlayer.getMoneyVal ();
 		playersMoney = amount;
 		myPlayer.setMoneyVal (playersMoney);
 		fileService.savePlayer (myPlayer);
 	}
-
-
-	void takePlayersMoney(float amount){
+		
+	void takePlayersMoney(float amount) {
 		float playerMoney = myPlayer.getMoneyVal();
 		playerMoney -= amount;
 		myPlayer.setMoneyVal (playerMoney);
 		fileService.savePlayer (myPlayer);
 
 	}
-
-	void increaseSlider(){
-		bizSlider.value +=  Time.deltaTime;
-		bizCycleTime -= Time.deltaTime;
-	}
-
-	void resetSlider(){
-		bizSlider.value = 0;
-		bizCycleTime = myBusiness.getCycleTime ();
-	}
 		
-	void checkIfYouCanAffordBusiness(){
-		
+	void checkIfYouCanAffordBusiness() {
 		if ( myBusiness.getCost() > myPlayer.getMoneyVal() ) {
 			button_BuyBusiness.interactable = false;
 		}else{
 			button_BuyBusiness.interactable = true;
 		}
-			
-
 	}
 
-	public void WorkBusiness() {
-		isTimerStarted = !isTimerStarted;
-		Debug.Log ("BusinessController // timer is : " + isTimerStarted);
-	}
+
 
 	public void BuyBusiness() {
+		
 		myAudio.Play ();
+
 		takePlayersMoney (bizCost);
 
 		// Updates the quantity owned both data and text
@@ -251,7 +313,9 @@ public class BusinessController : MonoBehaviour {
 		myPlayer.updateMoneyText ();
 
 		fileService.saveBusiness(myBusiness);
+
 	} // end of buybusiness
+
 
 	public void deleteBusiness () {
 		fileService.deleteBusinessById (bizId);

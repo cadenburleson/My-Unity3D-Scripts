@@ -20,12 +20,17 @@ public class Player : MonoBehaviour {
 
 	Player myPlayer;
 			
+
 	void Start () {
+		
 		fileService = new FileService ();
+
 		if (myPlayer == null) {
 			myPlayer = new Player (playerId);
 		}
+
 		fileService.loadPlayer (myPlayer);
+
 		updateMoneyText ();
 	}
 		
@@ -36,6 +41,7 @@ public class Player : MonoBehaviour {
 
 	// Constructors
 	public Player () {}
+
 	// Class can have multiple constructor methods
 	public Player(string newPlayerId) {
 		playerId = newPlayerId;
@@ -46,7 +52,7 @@ public class Player : MonoBehaviour {
 	public string getName() {
 		return playerName;
 	}
-	public void setName(string name){
+	public void setName(string name) {
 		playerName = name;
 	}
 

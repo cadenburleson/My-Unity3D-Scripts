@@ -8,6 +8,8 @@ public class ManagerData {
 	float managerPrice;
 	string managerDescription;
 
+	bool isHired;
+
 	// Constructors
 	public ManagerData (string manager_name) {
 		managerName = manager_name;
@@ -40,10 +42,14 @@ public class ManagerData {
 		managerDescription = newDescription;
 		//		fileService.savePlayer (myPlayer);
 	}
-
-//	public void updateMoneyText () {
-//		moneyText.text = money.ToString("C");
-//		//		Debug.Log("update Money Text >> player.money = " + money);
-//	}
+		
+	// Are these necessarry?
+	public bool getHiredStatus(){
+		return isHired;
+	}
+	public void setHiredStatus(bool newStatus){
+		isHired = newStatus;
+	}
+		
 
 }

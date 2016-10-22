@@ -24,7 +24,9 @@ public class FileService {
 
 	public void saveBusiness(Business business) {
 		BinaryFormatter bf = new BinaryFormatter ();
+
 		FileStream file = File.Open (Application.persistentDataPath + "/biz_" + business.getId() + ".dat", FileMode.OpenOrCreate);
+
 		bf.Serialize (file, business);
 		file.Close ();
 //		Debug.Log (">> FileService save: " + business.getId() );
