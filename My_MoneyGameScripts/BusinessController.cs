@@ -65,19 +65,6 @@ public class BusinessController : MonoBehaviour {
 	/// *** Manager ***
 	public ManagerController myManagerController;
 
-
-	public bool isMyManagerWorking = false;
-
-
-//	[SerializeField]
-//	Button button_HireManager;
-
-
-
-	/// <summary>
-	/// Start this instance.
-	/// </summary>
-
 	Player myPlayer;
 	Business myBusiness;
 	FileService fileService;
@@ -119,6 +106,8 @@ public class BusinessController : MonoBehaviour {
 		bizSlider.maxValue = myBusiness.getCycleTime();
 		bizSlider.value = 0;
 
+		Debug.Log ("BusinessController >>" + myBusiness.getManagerWorkingStatus());
+
 	} //End Of Start
 
 
@@ -139,8 +128,13 @@ public class BusinessController : MonoBehaviour {
 //		// with the correct Game Instance function
 //		GameManager.Instance.business[ myBusiness.getId () ].BuyBusiness ();
 
+		if (Input.GetKeyDown(KeyCode.B)) {
+			Debug.Log ("BusinessController >>" + myBusiness.getManagerWorkingStatus());
+		}
 
-		if (myManagerController.myManager.getHiredStatus() == true){
+
+//		if (myManagerController.myManager.getHiredStatus() == true){
+		if (myBusiness.getManagerWorkingStatus() == true){
 			
 			for (int x = 0; x <= bizCycleTime; x++) {
 				
@@ -223,6 +217,7 @@ public class BusinessController : MonoBehaviour {
 
 		myManagerController.myManager.setHiredStatus (true);
 
+		//used to keep track of if manager is hired
 		myBusiness.setManagerWorkingStatus (true); // Used to set so that the business can know if you have bought the manager or not // because the manager gets turned off so the bool is not always accessible in the manager
 
 		Debug.Log ("hireManager() >> (1)" + myPlayer.getMoneyVal());
@@ -237,6 +232,7 @@ public class BusinessController : MonoBehaviour {
 		// ?? Wouldn't it be better to do : 
 		//    myPlayer.Save(); ??
 		fileService.savePlayer (myPlayer);
+		fileService.saveBusiness (myBusiness);
 		fileService.saveManager (myManagerController.myManager);
 
 	}
@@ -288,9 +284,7 @@ public class BusinessController : MonoBehaviour {
 
 
 	public void BuyBusiness() {
-		
 		myAudio.Play ();
-
 		takePlayersMoney (bizCost);
 
 		// Updates the quantity owned both data and text

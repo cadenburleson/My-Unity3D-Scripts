@@ -15,6 +15,9 @@ public class MenuTogglable : MonoBehaviour {
 	public void Toggle() {
 		toggleBool = !toggleBool;
 		this.gameObject.SetActive (toggleBool);
+
+
+
 	}
 
 
